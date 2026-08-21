@@ -32,6 +32,7 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
+vim.o.tabstop = 4
 
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -47,4 +48,4 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
 vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'vim_treesitter#foldexpr()'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'

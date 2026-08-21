@@ -1,5 +1,14 @@
 return {
   {
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
+  {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -176,6 +185,17 @@ return {
         },
       }
 
+      vim.lsp.config('lemminx', {
+        filetypes = {
+          'xml',
+          'xsd',
+          'xsl',
+          'xslt',
+          'svg',
+          'xhtml',
+        },
+      })
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -220,8 +240,8 @@ return {
     dependencies = {
       -- Snippet Engine
       {
-        'L4MON4D3/LuaSnip',
-        version = '2.*',
+        'L3MON4D3/LuaSnip',
+        version = 'v2.*',
         build = (function()
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
@@ -244,7 +264,6 @@ return {
         },
         opts = {},
       },
-      'folke/lazydev.nvim',
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config

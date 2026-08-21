@@ -1,34 +1,46 @@
 return {
-  -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
+  lazy = false,
   build = ':TSUpdate',
-  main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-  -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+  branch = 'main',
   opts = {
     ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-    -- Autoinstall languages that are not installed
-    auto_install = true,
-    highlight = {
-      enable = true,
-      -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-      --  If you are experiencing weird indenting issues, add the language to
-      --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-      additional_vim_regex_highlighting = { 'ruby' },
-    },
-    indent = { enable = true, disable = { 'ruby' } },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        node_decremental = '<bs>',
-      },
-    },
   },
-  -- There are additional nvim-treesitter modules that you can use to interact
-  -- with nvim-treesitter. You should go explore a few and see what interests you:
-  --
-  --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-  --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-  --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  config = function(_, opts)
+    local ts = require 'nvim-treesitter'
+
+    ts:setup()
+
+    ts:install(opts.ensure_installed)
+
+    vim.treesitter.language.register('xml', { 'svg', 'xhtml' })
+
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo[0][0].foldmethod = 'expr'
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = { '*.lua', '*.ts', '*.js', '*.html' },
+      group = vim.api.nvim_create_augroup('nvim-treesitter', { clear = true }),
+      callback = function()
+        vim.treesitter.start()
+      end,
+    })
+
+    vim.keymap.set({ 'n', 'x', 'o' }, '<C-Space>', function()
+      if vim.treesitter.get_parser(nil, nil, { error = false }) then
+        require('vim.treesitter._select').select_parent(vim.v.count1)
+      else
+        vim.lsp.buf.selection_range(vim.v.count1)
+      end
+    end, { desc = 'Select parent treesitter node or outer incremental lsp selections' })
+
+    vim.keymap.set({ 'x', 'o' }, '<BS>', function()
+      if vim.treesitter.get_parser(nil, nil, { error = false }) then
+        require('vim.treesitter._select').select_child(vim.v.count1)
+      else
+        vim.lsp.buf.selection_range(-vim.v.count1)
+      end
+    end, { desc = 'Select child treesitter node or inner incremental lsp selections' })
+  end,
 }
