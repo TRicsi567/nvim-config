@@ -1,1 +1,1 @@
-require('gombolo').setup()
+require('nvim-gombolo.lsp').setup()

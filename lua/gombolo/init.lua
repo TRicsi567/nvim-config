@@ -21,17 +21,20 @@ function M.setup()
 
   require('lazy').setup({
     { import = 'gombolo.plugins' },
-    {
-      dir = '~/workspace/nvim-gombolo',
-      config = function()
-        require('nvim-gombolo').setup()
-      end,
-    },
+    -- {
+    --   dir = '~/workspace/nvim-gombolo',
+    --   config = function()
+    --     require('nvim-gombolo').setup()
+    --   end,
+    -- },
   }, {
-    dev = {
-      path = '~/workspace',
-      patterns = { 'nvim-gombolo' },
-      fallback = false,
+    -- dev = {
+    --   path = '~/workspace',
+    --   patterns = { 'nvim-gombolo' },
+    --   fallback = false,
+    -- },
+    performance = {
+      reset_packpath = false,
     },
     ui = {
       -- If you are using a Nerd Font: set icons to an empty table which will use the
