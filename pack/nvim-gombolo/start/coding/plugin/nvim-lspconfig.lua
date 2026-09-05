@@ -8,4 +8,6 @@ vim.pack.add {
 require('nvim-gombolo.coding.lang.lua').setup()
 require('nvim-gombolo.coding.lang.json').setup()
 require('nvim-gombolo.coding.lang.typescript').setup()
+require('nvim-gombolo.coding.lang.angular').setup()
+
 require('nvim-gombolo.coding.lsp_keybindings').setup()
